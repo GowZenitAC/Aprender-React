@@ -1,33 +1,39 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
+
 import './App.css'
-
+import { preguntas } from './data/preguntas'
+import { useState } from 'react'
 function App() {
-  const [count, setCount] = useState(0)
+  const [indexPregunta, setIndexPregunta] = useState(0) //pregunta actual, el indexPregunta es el indice de la pregunta y el setIndexPregunta es la funcion que cambia el indice de la pregunta
+  const [respuestas, setRespuestas] = useState(null)
+  
+  
+  
 
+  const selectRespuesta = (option) => {
+    const res = option === 'Sí' ? 40 : 10
+    setRespuestas(res + respuestas) //...respuestas es el valor actual y option es el nuevo valor
+    
+    saveRespuesta(res + respuestas)
+
+    
+
+    setIndexPregunta(indexPregunta + 1)
+    console.log({respuestas});
+  }
+  const saveRespuesta = (response) => {
+    // const respuestaAcumulada = parseInt(respuestas)
+    // console.log({respuestaAcumulada});
+    localStorage.setItem('respuestas', JSON.stringify(response)) // 'respuestas' es la clave y 'respuestaAcumulada' es el valor
+  }
   return (
     <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+      <h1 className='title'>Test vocacional</h1>
+      <h3>Pregunta: <span> {preguntas[indexPregunta].text}</span></h3>
+      <ul>
+        {preguntas[indexPregunta].answers.map((option, index) => <button className='btn_option' key={index} onClick={() => selectRespuesta(option)} >{option}</button>)}
+      </ul>
+      
+      <h4>Respuestas: {respuestas}</h4>
     </>
   )
 }
